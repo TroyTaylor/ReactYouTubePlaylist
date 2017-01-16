@@ -1,0 +1,26 @@
+{
+  "name": "reactapp",
+  "version": "1.0.0",
+  "description": "Site with YouTube playlist display",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --hot"
+  },
+  "keywords": [
+    "react",
+    "youtube",
+    "playlist"
+  ],
+  "author": "Troy Taylor",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "webpack": "^1.13.3",
+    "webpack-dev-server": "^1.16.2"
+  },
+  "devDependencies": {
+    "css-loader": "^0.25.0",
+    "style-loader": "^0.13.1"
+  }
+}
