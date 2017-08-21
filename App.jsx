@@ -11,10 +11,28 @@ class App extends React.Component {
 			userName: '',
 			id: ''
 		}
+		this.history = require('./util.js').setLocalStore;
+		this.addUser = require('./util.js').addUser;
+		this.historyUsers = require('./util.js').getUsers;
+		this.setUser = this.setUser.bind(this);
 		this.enterUser = this.enterUser.bind(this);
 		this.searchUser = this.searchUser.bind(this);
 		this.searchUserForm = this.searchUserForm.bind(this);
 	};
+	componentDidMount() {
+		this.history();
+		if (window.location.search.indexOf('userId=') > -1) {
+			let userId = window.location.search.split('userId=')[1].split('&')[0];
+			let userName = '';
+			if (window.location.search.indexOf('userName=') > -1) {
+				userName = window.location.search.split('userName=')[1].split('&')[0];
+				this.setState({userName: userName, id: userId});
+			}
+		}
+	}
+	setUser(id, name) {
+		this.setState({id: id, userName: name});
+	}
 	enterUser(event) {
 		this.setState({userName: event.target.value});
 	}
@@ -50,7 +68,8 @@ class App extends React.Component {
 					<input id="userName" value={this.state.userName} onChange={this.enterUser} />
 					<button onClick={this.searchUser}>Search</button>
 				</form>}
-				{this.state.id.length > 0 ? <Playlists channelId={this.state.id} suf={this.searchUserForm} userName={this.state.userName} changeUserName={this.enterUser} su={this.searchUser} /> : ''}
+				{this.historyUsers().length == 0 || this.state.id.length > 0 ? '' : <PreviousUser users={this.historyUsers()} su={this.setUser} />}
+				{this.state.id.length > 0 ? <Playlists channelId={this.state.id} userName={this.state.userName} suf={this.searchUserForm} userName={this.state.userName} changeUserName={this.enterUser} su={this.searchUser} /> : ''}
 			</div>
 		);
 	}
@@ -62,6 +81,29 @@ class Header extends React.Component {
 			<div>
 				<h1>New and Improved YouTube Randomizer</h1>
 			</div>
+		);
+	}
+}
+
+class PreviousUser extends React.Component {
+	render() {
+		return (
+			<div>
+				<p>Would like to select:</p>
+				<ul>
+					{this.props.users.map((list, i) => <PreviousUserItem key={i} componentData={list} su={this.props.su} />)}
+				</ul>
+			</div>
+		);
+	}
+}
+
+class PreviousUserItem extends React.Component {
+	render() {
+		return (
+			<li>
+				<button onClick={() => this.props.su(this.props.componentData.id, this.props.componentData.name)}>{this.props.componentData.name}</button>
+			</li>
 		);
 	}
 }
@@ -79,8 +121,14 @@ class Playlists extends React.Component {
 			displayVideoDescripion: true,
 			loopPlay: false,
 			loopCurrentVideo: false,
-			displayUsersPlaylists: true
+			displayUsersPlaylists: true,
+			playlistError: ''
 		}
+		this.addUser = require('./util.js').addUser;
+		this.addCombination = require('./util.js').addCombination;
+		this.historyCombinations = require('./util.js').isCombination;
+		this.getCombination = require('./util.js').getCombination;
+		this.selectPlaylistsFromStorage = this.selectPlaylistsFromStorage.bind(this);
 		this.selectPlaylistProperty = this.selectPlaylistProperty.bind(this);
 		this.selectAllPlaylists = this.selectAllPlaylists.bind(this);
 		this.combineButton = this.combineButton.bind(this);
@@ -109,20 +157,54 @@ class Playlists extends React.Component {
 		fetch('https://www.googleapis.com/youtube/v3/playlists?' + u).then(function(response) {
 			response.json().then(function(data) {
 				that.state.playlists = that.state.playlists.concat(data.items);
+				if (that.state.playlists.length > 0) {
+					that.addUser(userId, that.props.userName);
+				}
+				let previouslySelected = [];
 				if (data.nextPageToken != undefined) {
 					that.getPlaylists(data.nextPageToken, userId);
 				} else {
 					//Add property whether user has selected playlist
 					let len = that.state.playlists.length;
+					if (window.location.search.indexOf('combineList=') > -1) previouslySelected = window.location.search.split('combineList=')[1].split('&')[0].split(',');
 					for (let i = 0; i < len; i++) {
-						that.state.playlists[i].checked = false;
+						if (previouslySelected.indexOf(that.state.playlists[i].id) > -1) that.state.playlists[i].checked = true;
+						else that.state.playlists[i].checked = false;
 					}
 					that.setState({playlists: that.state.playlists});
 				}
+				if (previouslySelected.length > 0) that.combinePlaylists('params');
 			});
 		}).catch(function(error) {
 			console.log('error ' + error);
 		});
+	}
+	combinePlaylists(source) {
+		this.state.playlistError = '';
+		let playlistsToCombine = this.state.playlists.filter(function(p) {
+			return p.checked == true;
+		}).map(function(current) {
+			return {id: current.id, name: current.snippet.title};
+		});
+		if (playlistsToCombine.length == 0) {
+			switch (source) {
+				case 'params':
+					this.state.playlistError = 'There are no valid playlist ids in your link';
+					break;
+				case 'button':
+					this.state.playlistError = 'Please select at least one playlist';
+					break;
+				case 'local':
+					this.state.playlistError = 'Looks like all the playlists are old';
+					break;
+			}
+		}
+		this.setState({combineIds: playlistsToCombine, playlistError: this.state.playlistError});
+		let updatedURL = window.location.protocol + "//" + window.location.host + window.location.pathname + '?userId=' + this.props.channelId + '&userName=' + this.props.userName + '&combineList=' + playlistsToCombine.map(function(current){return current.id}).toString();
+		window.history.pushState({path:updatedURL}, '', updatedURL);
+		this.addCombination(this.props.channelId, playlistsToCombine.map(function(current){return current.id}));
+		//For some reason the state is stale, so the array has to be passed to get the updated list of playlists
+		if (playlistsToCombine.length > 0) this.loopLists(playlistsToCombine);
 	}
 	loopLists(selectedPlaylists) {
 		this.state.generatedList = [];
@@ -206,6 +288,15 @@ class Playlists extends React.Component {
 			this.getPlaylists('', x.channelId);
 		}
 	}
+	selectPlaylistsFromStorage(event) {
+		let combo = this.getCombination(this.props.channelId);
+		for (let i = 0; i < this.state.playlists.length; i++) {
+			if (combo.indexOf(this.state.playlists[i].id) > -1) this.state.playlists[i].checked = true;
+			else this.state.playlists[i].checked = false;
+		}
+		this.setState({playlists: this.state.playlists});
+		this.combinePlaylists('local');
+	}
 	selectPlaylistProperty(event) {
 		let selectedPlaylist = this.state.playlists.filter(function(p) {
 			return p.id == event.target.value;
@@ -225,14 +316,7 @@ class Playlists extends React.Component {
 		this.setState({playlists: this.state.playlists});
 	}
 	combineButton(event) {
-		let playlistsToCombine = this.state.playlists.filter(function(p) {
-			return p.checked == true;
-		}).map(function(current) {
-			return {id: current.id, name: current.snippet.title};
-		});
-		this.setState({combineIds: playlistsToCombine});
-		//For some reason the state is stale, so the array has to be passed to get the updated list of playlists
-		if (playlistsToCombine.length > 0) this.loopLists(playlistsToCombine);
+		this.combinePlaylists('button');
 	}
 	previousVideo(event) {
 		if (this.state.currentVideoId > 0) {
@@ -262,7 +346,7 @@ class Playlists extends React.Component {
 	}
 	autoPlay(event) {
 		event.target.playVideo();
-		document.title = 'React App Playing: ' + this.state.generatedList[this.state.currentVideoId].snippet.title;
+		document.title = 'YouTube Randomizer Playing: ' + this.state.generatedList[this.state.currentVideoId].snippet.title;
 	}
 	finishedVideo(event) {
 		if (this.state.loopCurrentVideo) {
@@ -344,6 +428,10 @@ class Playlists extends React.Component {
 						<input id="changeUserName" value={this.props.userName} onChange={this.props.changeUserName} />
 						<button onClick={this.props.su}>Search</button>
 					</form>
+					{this.historyCombinations(this.props.channelId) && this.state.playlists.length > 0 ? <p className="psHistoryCombo">
+						<span>Would you like to use the last combination?</span>
+						<button onClick={this.selectPlaylistsFromStorage}>Yes</button>
+					</p>: ''}
 					<ul>
 						<li>
 							<input type="checkbox" id="selectAll" onChange={this.selectAllPlaylists} />
@@ -352,6 +440,7 @@ class Playlists extends React.Component {
 						{this.state.playlists.map((list, i) => <ListElement key={i} componentData={list} spp={this.selectPlaylistProperty} />)}
 					</ul>
 					<button onClick={this.combineButton}>Combine</button>
+					<span className="error">{this.state.playlistError}</span>
 				</div>
 				{this.state.generatedList.length > 0 ? <VideoPlayer showHalfSize={this.state.displayUsersPlaylists} index={this.state.currentVideoId + 1} totalVids={this.state.generatedList.length} prevClick={this.previousVideo} prevData={prevVidSnip} nextClick={this.nextVideo} nextData={nextVidSnip} videoData={this.state.generatedList[this.state.currentVideoId].snippet} videoReady={this.autoPlay} videoDone={this.finishedVideo} videoSC={this.videoStateChanged} showDesc={this.state.displayVideoDescripion} svc={this.showDescription} loopVid={this.state.loopCurrentVideo} lv={this.loopVideo} loop={this.state.loopPlay} lp={this.loopPlaylist} shuffleClick={this.randomizePlaylist} gli={this.state.generatedList} ci={this.state.currentIcon} goto={this.goToVideo} dup={this.state.displayUsersPlaylists} sup={this.showUsersPlaylists} /> : ''}
 			</div>
@@ -366,6 +455,19 @@ class ListElement extends React.Component {
 				<input type="checkbox" value={this.props.componentData.id} checked={this.props.componentData.checked} id={this.props.componentData.id} onChange={this.props.spp} />
 				<label htmlFor={this.props.componentData.id}>{this.props.componentData.snippet.title}</label>
 			</li>
+		);
+	}
+}
+
+class PreviousCombo extends React.Component {
+	render() {
+		return (
+			<div>
+				<p>
+					Would you like to use the last combination?
+					<button>Yes</button>
+				</p>
+			</div>
 		);
 	}
 }

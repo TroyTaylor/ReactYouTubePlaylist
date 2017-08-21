@@ -4,6 +4,12 @@
 .clear {
 	clear: both;
 }
+.error {
+	display: inline-block;
+	color: #FF0000;
+	vertical-align: middle;
+	margin-left: 10px;
+}
 .playlistSection {
 	position: absolute;
 	left: 0;
@@ -21,6 +27,11 @@
 }
 .playlistSection li {
 	list-style: none;
+}
+.psHistoryCombo span {
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 10px;
 }
 .videoSection {
 	position: absolute;
