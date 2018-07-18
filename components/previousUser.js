@@ -4,7 +4,7 @@ import PreviousUserItem from './previousUserItem';
 class PreviousUser extends React.Component {
 	render() {
 		return (
-			<div>
+			<div className='previousUser'>
 				<p>Would like to select:</p>
 				<ul>
 					{this.props.users.map((list, i) => <PreviousUserItem key={i} componentData={list} su={this.props.su} />)}

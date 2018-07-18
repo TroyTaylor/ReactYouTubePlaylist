@@ -1,5 +1,6 @@
 import React from 'react';
 import update from 'react-addons-update';
+import LoadingWheel from './loadingWheel';
 import ListElement from './listElement';
 import PreviousUserItem from './previousUserItem';
 import VideoPlayer from './videoPlayer';
@@ -18,6 +19,8 @@ class Playlists extends React.Component {
 			loopPlay: false,
 			loopCurrentVideo: false,
 			displayUsersPlaylists: true,
+			retrievingPlaylists: false,
+			combiningPlaylists: false,
 			playlistError: ''
 		}
 		this.addUser = require('../util.js').addUser;
@@ -50,6 +53,7 @@ class Playlists extends React.Component {
 		u.append('channelId', userId);
 		u.append('key', 'AIzaSyArX5eV_PIIYzNMt-ua9uiJiD0xjTia-Xk');
 		if (page != '') u.append('pageToken', page);
+		this.setState({retrievingPlaylists: true});
 		fetch('https://www.googleapis.com/youtube/v3/playlists?' + u).then(function(response) {
 			response.json().then(function(data) {
 				that.state.playlists = that.state.playlists.concat(data.items);
@@ -67,7 +71,7 @@ class Playlists extends React.Component {
 						if (previouslySelected.indexOf(that.state.playlists[i].id) > -1) that.state.playlists[i].checked = true;
 						else that.state.playlists[i].checked = false;
 					}
-					that.setState({playlists: that.state.playlists});
+					that.setState({playlists: that.state.playlists, retrievingPlaylists: false});
 				}
 				if (previouslySelected.length > 0) that.combinePlaylists('params');
 			});
@@ -104,7 +108,7 @@ class Playlists extends React.Component {
 	}
 	loopLists(selectedPlaylists) {
 		this.state.generatedList = [];
-		this.setState({generatedList: this.state.generatedList});
+		this.setState({generatedList: this.state.generatedList, combiningPlaylists: true});
 		this.getPlaylistItems(selectedPlaylists[0].id, '');
 	}
 	getPlaylistItems(id, page) {
@@ -133,6 +137,7 @@ class Playlists extends React.Component {
 							return x.id == that.state.generatedList[i].snippet.playlistId;
 						}).name;
 					}
+					that.setState({combiningPlaylists: false});
 					that.smoothScrollToTop();
 					setTimeout(function(){
 						that.smoothScrollToTop();
@@ -242,7 +247,7 @@ class Playlists extends React.Component {
 	}
 	autoPlay(event) {
 		event.target.playVideo();
-		document.title = 'YouTube Randomizer Playing: ' + this.state.generatedList[this.state.currentVideoId].snippet.title;
+		document.title = 'Troy\'s YouTube Randomizer Playing: ' + this.state.generatedList[this.state.currentVideoId].snippet.title;
 	}
 	finishedVideo(event) {
 		if (this.state.loopCurrentVideo) {
@@ -277,7 +282,7 @@ class Playlists extends React.Component {
 				this.state.currentIcon = 'swap_calls';
 				//The onReady event only occurs for the first video, so to get autoplay after that it must be triggered here
 				event.target.playVideo();
-				document.title = 'React App Playing: ' + this.state.generatedList[this.state.currentVideoId].snippet.title;
+				document.title = 'Troy\'s YouTube Randomizer Playing: ' + this.state.generatedList[this.state.currentVideoId].snippet.title;
 				break;
 			default:
 				this.state.currentIcon = '';
@@ -317,10 +322,10 @@ class Playlists extends React.Component {
 			return current.snippet.resourceId.videoId;
 		});
 		return (
-			<div>
+			<div className='main'>
 				<div className={this.state.displayUsersPlaylists ? 'playlistSection' : 'playlistSection pushed'}>
 					<p>Enter a user name:</p>
-					<form onSubmit = {this.props.suf}>
+					<form onSubmit={this.props.suf}>
 						<input id="changeUserName" value={this.props.userName} onChange={this.props.changeUserName} />
 						<button onClick={this.props.su}>Search</button>
 					</form>
@@ -335,10 +340,11 @@ class Playlists extends React.Component {
 						</li>
 						{this.state.playlists.map((list, i) => <ListElement key={i} componentData={list} spp={this.selectPlaylistProperty} />)}
 					</ul>
+					{this.state.retrievingPlaylists ? <LoadingWheel containerClass='' message='Loading Playlists' showWheel={this.state.retrievingPlaylists} /> : ''}
 					<button onClick={this.combineButton}>Combine</button>
 					<span className="error">{this.state.playlistError}</span>
 				</div>
-				{this.state.generatedList.length > 0 ? <VideoPlayer showHalfSize={this.state.displayUsersPlaylists} index={this.state.currentVideoId + 1} totalVids={this.state.generatedList.length} prevClick={this.previousVideo} prevData={prevVidSnip} nextClick={this.nextVideo} nextData={nextVidSnip} videoData={this.state.generatedList[this.state.currentVideoId].snippet} videoReady={this.autoPlay} videoDone={this.finishedVideo} videoSC={this.videoStateChanged} showDesc={this.state.displayVideoDescripion} svc={this.showDescription} loopVid={this.state.loopCurrentVideo} lv={this.loopVideo} loop={this.state.loopPlay} lp={this.loopPlaylist} shuffleClick={this.randomizePlaylist} gli={this.state.generatedList} ci={this.state.currentIcon} goto={this.goToVideo} dup={this.state.displayUsersPlaylists} sup={this.showUsersPlaylists} /> : ''}
+				{this.state.generatedList.length > 0 ? <VideoPlayer showHalfSize={this.state.displayUsersPlaylists} index={this.state.currentVideoId + 1} totalVids={this.state.generatedList.length} prevClick={this.previousVideo} prevData={prevVidSnip} nextClick={this.nextVideo} nextData={nextVidSnip} videoData={this.state.generatedList[this.state.currentVideoId].snippet} videoReady={this.autoPlay} videoDone={this.finishedVideo} videoSC={this.videoStateChanged} showDesc={this.state.displayVideoDescripion} svc={this.showDescription} loopVid={this.state.loopCurrentVideo} lv={this.loopVideo} loop={this.state.loopPlay} lp={this.loopPlaylist} shuffleClick={this.randomizePlaylist} gli={this.state.generatedList} ci={this.state.currentIcon} goto={this.goToVideo} dup={this.state.displayUsersPlaylists} sup={this.showUsersPlaylists} /> : <LoadingWheel containerClass='videoSection' message='Loading Videos' showWheel={this.state.combiningPlaylists} />}
 			</div>
 		);
 	}

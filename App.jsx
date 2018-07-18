@@ -66,13 +66,16 @@ class App extends React.Component {
 		return (
 			<div>
 				<Header/>
-				{this.state.id.length > 0 ? '' : <p>Enter a user name:</p>}
-				{this.state.id.length > 0 ? '' : <form onSubmit={this.searchUserForm}>
-					<input id="userName" value={this.state.userName} onChange={this.enterUser} />
-					<button onClick={this.searchUser}>Search</button>
-				</form>}
-				{this.historyUsers().length == 0 || this.state.id.length > 0 ? '' : <PreviousUser users={this.historyUsers()} su={this.setUser} />}
-				{this.state.id.length > 0 ? <Playlists channelId={this.state.id} userName={this.state.userName} suf={this.searchUserForm} userName={this.state.userName} changeUserName={this.enterUser} su={this.searchUser} /> : ''}
+				{this.state.id.length > 0 ? 
+					<Playlists channelId={this.state.id} userName={this.state.userName} suf={this.searchUserForm} userName={this.state.userName} changeUserName={this.enterUser} su={this.searchUser} /> : 
+					<div className='playlistSection'>
+						{this.state.id.length > 0 ? '' : <p>Enter a user name:</p>}
+						{this.state.id.length > 0 ? '' : <form onSubmit={this.searchUserForm}>
+							<input id="userName" value={this.state.userName} onChange={this.enterUser} />
+							<button onClick={this.searchUser}>Search</button>
+						</form>}
+						{this.historyUsers().length == 0 || this.state.id.length > 0 ? '' : <PreviousUser users={this.historyUsers()} su={this.setUser} />}
+					</div>}
 			</div>
 		);
 	}

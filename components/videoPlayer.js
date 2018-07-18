@@ -56,10 +56,10 @@ class VideoPlayer extends React.Component {
 			<div className={this.props.showHalfSize ? 'videoSection' : 'videoSection full'}>
 				<p className="currentTitle"><span className="currentTitleName">{this.props.videoData.title}</span> <span className="currentTitleCount">{this.props.index} of {this.props.totalVids}</span></p>
 				<div className="videoNav">
-					{this.props.prevData.title == undefined ? '' : <button className="prevButton" onClick={this.props.prevClick}><div className="matIcon miPrev">skip_previous</div></button>}
+					{this.props.prevData.title == undefined ? <div></div> : <button className="prevButton" onClick={this.props.prevClick}><div className="matIcon miPrev">skip_previous</div></button>}
 					{this.props.prevData.title == undefined ? '' : <div className="vnInfo prevInfo"><p>Previous: {this.props.prevData.title}</p><img src={this.props.prevData.thumbnails.default.url} /></div>}
 					
-					{this.props.nextData.title == undefined ? '' : <button className="nextButton" onClick={this.props.nextClick}><div className="matIcon miNext">skip_next</div></button>}
+					{this.props.nextData.title == undefined ? <div></div> : <button className="nextButton" onClick={this.props.nextClick}><div className="matIcon miNext">skip_next</div></button>}
 					{this.props.nextData.title == undefined ? '' : <div className="vnInfo nextInfo"><p>Next: {this.props.nextData.title}</p><img src={this.props.nextData.thumbnails.default.url} /></div>}
 				</div>
 				<div className="clear"></div>
@@ -105,7 +105,8 @@ class VideoPlayer extends React.Component {
 							(video, i) => <li key={i} className={this.props.index - 1 == i ? 'currentPlaylistItem' : ''}>
 								<span>{(i + 1) + '. '}</span>
 								<a href="javascript:void(0)" title={video.snippet.title} onClick={() => this.props.goto(i)}>
-									<span>{video.snippet.title} - [{video.playlistName}] {this.props.index - 1 == i ? <div className={'matIcon playingIcon ' + this.props.ci}>{this.props.ci}</div> : ''}</span>
+									<span className="videoName">{video.snippet.title} - [{video.playlistName}]</span>
+									{this.props.index - 1 == i ? <span className={'matIcon playingIcon ' + this.props.ci}>{this.props.ci}</span> : ''}
 								</a>
 							</li>
 						)}
