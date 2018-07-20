@@ -100,17 +100,16 @@ class VideoPlayer extends React.Component {
 					{this.props.videoData.description}
 				</div>
 				<div className={this.state.relatedVideos.length > 0 ? 'lineupSection half' : 'lineupSection'}>
-					<ul>
+					<ol>
 						{this.props.gli.map(
 							(video, i) => <li key={i} className={this.props.index - 1 == i ? 'currentPlaylistItem' : ''}>
-								<span>{(i + 1) + '. '}</span>
-								<a href="javascript:void(0)" title={video.snippet.title} onClick={() => this.props.goto(i)}>
+								<span title={video.snippet.title} onClick={() => this.props.goto(i)}>
 									<span className="videoName">{video.snippet.title} - [{video.playlistName}]</span>
 									{this.props.index - 1 == i ? <span className={'matIcon playingIcon ' + this.props.ci}>{this.props.ci}</span> : ''}
-								</a>
+								</span>
 							</li>
 						)}
-					</ul>
+					</ol>
 				</div>
 				{this.state.relatedVideos.length > 0 ? <RelatedVideoSection related={this.state.relatedVideos} /> : ''}
 			</div>

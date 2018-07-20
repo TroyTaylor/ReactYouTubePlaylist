@@ -250,9 +250,10 @@ button {
 	float: left;
 	width: 49%;
 }
-.lineupSection ul {
+.lineupSection ol {
 	margin: 0;
 	padding: 0;
+	list-style-position: inside;
 }
 .lineupSection li {
 	padding: 10px;
@@ -265,20 +266,20 @@ button {
 	background-color: #D3ECF7;
 	color: #FF8900;
 }
-.lineupSection li a {
-	text-decoration: none;
+.lineupSection li span {
+	cursor: pointer;
 }
-.lineupSection li a .videoName {
+.lineupSection li span .videoName {
 	text-decoration: underline;
 }
-.lineupSection li:nth-child(odd) a {
+.lineupSection li:nth-child(odd) span {
 	color: #D3ECF7;
 }
-.lineupSection li:nth-child(even) a {
+.lineupSection li:nth-child(even) span {
 	color: #FF8900;
 }
 .lineupSection li.currentPlaylistItem,
-.lineupSection li.currentPlaylistItem a {
+.lineupSection li.currentPlaylistItem span {
 	color: #4809B2;
 }
 .playingIcon {
