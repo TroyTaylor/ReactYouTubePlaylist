@@ -1,5 +1,6 @@
 import React from 'react';
 import update from 'react-addons-update';
+import {Helmet} from "react-helmet";
 import LoadingWheel from './loadingWheel';
 import ListElement from './listElement';
 import PreviousUserItem from './previousUserItem';
@@ -13,6 +14,7 @@ class Playlists extends React.Component {
 			combineIds: [],
 			currentCombineId: 0,
 			generatedList: [],
+			pageTitle: 'Troy\'s YouTube Randomizer',
 			currentVideoId: 0,
 			currentIcon: '',
 			displayVideoDescripion: true,
@@ -247,7 +249,8 @@ class Playlists extends React.Component {
 	}
 	autoPlay(event) {
 		event.target.playVideo();
-		document.title = 'Troy\'s YouTube Randomizer Playing: ' + this.state.generatedList[this.state.currentVideoId].snippet.title;
+		this.state.pageTitle = 'Playing: ' + this.state.generatedList[this.state.currentVideoId].snippet.title + ' on Troy\'s YouTube Randomizer';
+		this.setState({pageTitle: this.state.pageTitle});
 	}
 	finishedVideo(event) {
 		if (this.state.loopCurrentVideo) {
@@ -267,27 +270,32 @@ class Playlists extends React.Component {
 	videoStateChanged(event) {
 		switch (event.data) {
 			case 0:
+				this.state.pageTitle = 'Stopped: ' + this.state.generatedList[this.state.currentVideoId].snippet.title + ' on Troy\'s YouTube Randomizer';
 				this.state.currentIcon = 'stop';
 				break;
 			case 1:
+				this.state.pageTitle = 'Playing: ' + this.state.generatedList[this.state.currentVideoId].snippet.title + ' on Troy\'s YouTube Randomizer';
 				this.state.currentIcon = 'play_arrow';
 				break;
 			case 2:
+				this.state.pageTitle = 'Paused: ' + this.state.generatedList[this.state.currentVideoId].snippet.title + ' on Troy\'s YouTube Randomizer';
 				this.state.currentIcon = 'pause';
 				break;
 			case 3:
+				this.state.pageTitle = 'Loading: ' + this.state.generatedList[this.state.currentVideoId].snippet.title + ' on Troy\'s YouTube Randomizer';
 				this.state.currentIcon = 'equalizer';
 				break;
 			case 5:
+				this.state.pageTitle = 'Swapping: ' + this.state.generatedList[this.state.currentVideoId].snippet.title + ' on Troy\'s YouTube Randomizer';
 				this.state.currentIcon = 'swap_calls';
 				//The onReady event only occurs for the first video, so to get autoplay after that it must be triggered here
 				event.target.playVideo();
-				document.title = 'Troy\'s YouTube Randomizer Playing: ' + this.state.generatedList[this.state.currentVideoId].snippet.title;
 				break;
 			default:
+				this.state.pageTitle = 'Troy\'s YouTube Randomizer';
 				this.state.currentIcon = '';
 		}
-		this.setState({currentIcon: this.state.currentIcon});
+		this.setState({pageTitle: this.state.pageTitle, currentIcon: this.state.currentIcon});
 	}
 	loopPlaylist(event) {
 		this.state.loopPlay = event.target.checked;
@@ -323,6 +331,9 @@ class Playlists extends React.Component {
 		});
 		return (
 			<div className='main'>
+				<Helmet>
+					<title>{this.state.pageTitle}</title>
+				</Helmet>
 				<div className={this.state.displayUsersPlaylists ? 'playlistSection' : 'playlistSection pushed'}>
 					<p>Enter a user name:</p>
 					<form onSubmit={this.props.suf}>
