@@ -3,17 +3,20 @@ input,
 button {
 	font-family: 'Roboto', sans-serif;
 }
+body {
+	margin: 0;
+}
 .hidden {
 	display: none;
-}
-.clear {
-	clear: both;
 }
 .error {
 	display: inline-block;
 	color: #FF0000;
 	vertical-align: middle;
 	margin-left: 10px;
+}
+h1 {
+	margin: 10px;
 }
 .previousUser li {
 	margin-bottom: 10px;
@@ -101,9 +104,11 @@ button {
 }
 .videoSection button {
 	cursor: pointer;
+	box-shadow: 3px 3px 5px #000000;
 	-moz-border-radius: 30px;
 	border-radius: 30px;
 	border-width: 0;
+	padding: 0;
 	width: 32px;
 	height: 32px;
 }
@@ -111,9 +116,23 @@ button {
 	background-color: #D3ECF7;
 	margin: 0 0 10px 10px;
 }
+.prevButton:active {
+	box-shadow: 1px 1px 5px #000000;
+	background-color: #FF8900;
+}
+.prevButton:active .miPrev {
+	color: #007CB2;
+}
 .nextButton {
 	background-color: #FF8900;
 	margin: 0 10px 10px 0;
+}
+.nextButton:active {
+	box-shadow: 1px 1px 5px #000000;
+	background-color: #D3ECF7;
+}
+.nextButton:active .miNext {
+	color: #007CB2;
 }
 .matIcon {
 	font-family: 'Material Icons';
@@ -122,12 +141,10 @@ button {
 .miPrev {
 	color: #FF8900;
 	line-height: 30px;
-	margin-left: -4px;
 }
 .miNext {
 	color: #D3ECF7;
 	line-height: 30px;
-	margin-left: -4px;
 }
 .prevButton:hover + .prevInfo,
 .nextButton:hover + .nextInfo,
@@ -197,15 +214,13 @@ button {
 .playOpts {
 	margin: 10px 0;
 }
-#showVideoDesc,
-#loopVideo,
-#loopPlay,
-#showUsersPlaylists {
+.hiddenInput {
 	display: none;
 }
 .poWrap {
 	cursor: pointer;
 	display: inline-block;
+	box-shadow: 3px 3px 5px #000000;
 	-moz-border-radius: 19px;
 	border-radius: 19px;
 	vertical-align: middle;
@@ -214,6 +229,9 @@ button {
 	width: 32px;
 	height: 32px;
 	margin-right: 5px;
+}
+.poWrap:active {
+	box-shadow: 1px 1px 5px #000000;
 }
 .loopIcon {
 	line-height: 32px;
@@ -226,20 +244,16 @@ button {
 #showUsersPlaylists:checked + label .loopIcon{
 	color: #FF8900;
 }
-.playOpts label {
-	cursor: pointer;
-}
 .shuffleIcon {
 	line-height: 32px;
 	color: #FF8900;
-	margin-left: -1px;
 }
 .relatedIcon {
 	line-height: 32px;
 	color: #FF8900;
-	margin-left: -1px;
 }
 .lineupSection {
+	position: relative;
 	overflow: scroll;
 	width: 100%;
 	height: 500px;
@@ -265,6 +279,9 @@ button {
 .lineupSection li:nth-child(even) {
 	background-color: #D3ECF7;
 	color: #FF8900;
+}
+.lineupSection li div {
+	display: inline;
 }
 .lineupSection li span {
 	cursor: pointer;

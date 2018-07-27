@@ -1,7 +1,7 @@
 {
   "name": "reactapp",
   "version": "1.0.0",
-  "description": "Site with YouTube playlist display",
+  "description": "Application to combine and randomize YouTube playlists",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --hot"
@@ -18,7 +18,9 @@
     "react-addons-update": "^15.6.2",
     "react-dom": "^16.4.1",
     "react-helmet": "^5.2.0",
+    "react-scroll": "^1.7.10",
     "react-youtube": "^7.6.0",
+    "save": "^2.3.2",
     "webpack": "^4.16.1",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.4"

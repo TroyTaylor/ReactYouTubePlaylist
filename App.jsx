@@ -1,6 +1,7 @@
 import React from 'react';
 import update from 'react-addons-update';
 import YouTube from 'react-youtube';
+import {Helmet} from "react-helmet";
 import Header from './components/header';
 import PreviousUser from './components/previousUser';
 import Playlists from './components/playlists';
@@ -64,19 +65,22 @@ class App extends React.Component {
 	}
 	render() {
 		return (
-			<div>
+			<React.Fragment>
+				<Helmet>
+					<title>Troy's YouTube Randomizer</title>
+				</Helmet>
 				<Header/>
 				{this.state.id.length > 0 ? 
 					<Playlists channelId={this.state.id} userName={this.state.userName} suf={this.searchUserForm} userName={this.state.userName} changeUserName={this.enterUser} su={this.searchUser} /> : 
 					<div className='playlistSection'>
-						{this.state.id.length > 0 ? '' : <p>Enter a user name:</p>}
-						{this.state.id.length > 0 ? '' : <form onSubmit={this.searchUserForm}>
+						<p>Enter a user name:</p>
+						<form onSubmit={this.searchUserForm}>
 							<input id="userName" value={this.state.userName} onChange={this.enterUser} />
 							<button onClick={this.searchUser}>Search</button>
-						</form>}
+						</form>
 						{this.historyUsers().length == 0 || this.state.id.length > 0 ? '' : <PreviousUser users={this.historyUsers()} su={this.setUser} />}
 					</div>}
-			</div>
+			</React.Fragment>
 		);
 	}
 }

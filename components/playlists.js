@@ -1,9 +1,9 @@
 import React from 'react';
 import update from 'react-addons-update';
 import {Helmet} from "react-helmet";
+import {animateScroll as scroll} from 'react-scroll';
 import LoadingWheel from './loadingWheel';
 import ListElement from './listElement';
-import PreviousUserItem from './previousUserItem';
 import VideoPlayer from './videoPlayer';
 
 class Playlists extends React.Component {
@@ -141,9 +141,6 @@ class Playlists extends React.Component {
 					}
 					that.setState({combiningPlaylists: false});
 					that.smoothScrollToTop();
-					setTimeout(function(){
-						that.smoothScrollToTop();
-					}, 40);
 				}
 			});
 		}).catch(function(error) {
@@ -165,13 +162,7 @@ class Playlists extends React.Component {
 		this.setState({currentCombineId: this.state.currentCombineId, generatedList: this.state.generatedList, currentVideoId: this.state.currentVideoId});
 	}
 	smoothScrollToTop() {
-		let that = this;
-		if (window.scrollY > 0) {
-			window.scrollTo(0, window.scrollY - 100);
-			setTimeout(function(){
-				that.smoothScrollToTop();
-			}, 40);
-		}
+		scroll.scrollToTop();
 	}
 	componentDidMount() {
 		this.state.playlists = [];
@@ -330,8 +321,8 @@ class Playlists extends React.Component {
 			return current.snippet.resourceId.videoId;
 		});
 		return (
-			<div className='main'>
-				<Helmet>
+			<div className='main' ref={(section) => { this.Main = section; }}>
+				<Helmet defer={false}>
 					<title>{this.state.pageTitle}</title>
 				</Helmet>
 				<div className={this.state.displayUsersPlaylists ? 'playlistSection' : 'playlistSection pushed'}>
