@@ -317,11 +317,8 @@ class Playlists extends React.Component {
 		} else if (this.state.loopPlay) {
 			nextVidSnip = this.state.generatedList[0].snippet;
 		}
-		let videoList = this.state.generatedList.map(function(current) {
-			return current.snippet.resourceId.videoId;
-		});
 		return (
-			<div className='main' ref={(section) => { this.Main = section; }}>
+			<div className='main'>
 				<Helmet defer={false}>
 					<title>{this.state.pageTitle}</title>
 				</Helmet>

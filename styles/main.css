@@ -120,7 +120,7 @@ h1 {
 	box-shadow: 1px 1px 5px #000000;
 	background-color: #FF8900;
 }
-.prevButton:active .miPrev {
+.prevButton:active {
 	color: #007CB2;
 }
 .nextButton {
@@ -131,7 +131,7 @@ h1 {
 	box-shadow: 1px 1px 5px #000000;
 	background-color: #D3ECF7;
 }
-.nextButton:active .miNext {
+.nextButton:active {
 	color: #007CB2;
 }
 .matIcon {
@@ -238,10 +238,10 @@ h1 {
 	color: #007CB2;
 	margin-left: -1px;
 }
-#showVideoDesc:checked + label .loopIcon,
-#loopVideo:checked + label .loopIcon,
-#loopPlay:checked + label .loopIcon, 
-#showUsersPlaylists:checked + label .loopIcon{
+#showVideoDesc:checked + label,
+#loopVideo:checked + label,
+#loopPlay:checked + label, 
+#showUsersPlaylists:checked + label{
 	color: #FF8900;
 }
 .shuffleIcon {
@@ -348,9 +348,11 @@ h1 {
 	list-style: none;
 }
 .relatedSection li a {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	margin-bottom: 10px;
 }
 .relatedSection li a span {
-	display: block;
 	margin-bottom: 10px;
 }

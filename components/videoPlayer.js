@@ -69,39 +69,27 @@ class VideoPlayer extends React.Component {
 			<div className={this.props.showHalfSize ? 'videoSection' : 'videoSection full'}>
 				<p className="currentTitle"><span className="currentTitleName">{this.props.videoData.title}</span> <span className="currentTitleCount">{this.props.index} of {this.props.totalVids}</span></p>
 				<div className="videoNav">
-					{this.props.prevData.title == undefined ? <div></div> : <button className="prevButton" onClick={() => this.scrollCurrentVideoToTop('pli' + (this.props.index - 2), this.props.prevClick)}><div className="matIcon miPrev">skip_previous</div></button>}
+					{this.props.prevData.title == undefined ? <div></div> : <button className="prevButton matIcon miPrev" onClick={() => this.scrollCurrentVideoToTop('pli' + (this.props.index - 2), this.props.prevClick)}>skip_previous</button>}
 					{this.props.prevData.title == undefined ? '' : <div className="vnInfo prevInfo"><p>Previous: {this.props.prevData.title}</p><img src={this.props.prevData.thumbnails.default.url} /></div>}
 					
-					{this.props.nextData.title == undefined ? <div></div> : <button className="nextButton" onClick={() => this.scrollCurrentVideoToTop('pli' + this.props.index, this.props.nextClick)}><div className="matIcon miNext">skip_next</div></button>}
+					{this.props.nextData.title == undefined ? <div></div> : <button className="nextButton matIcon miNext" onClick={() => this.scrollCurrentVideoToTop('pli' + this.props.index, this.props.nextClick)}>skip_next</button>}
 					{this.props.nextData.title == undefined ? '' : <div className="vnInfo nextInfo"><p>Next: {this.props.nextData.title}</p><img src={this.props.nextData.thumbnails.default.url} /></div>}
 				</div>
 				<YouTube videoId={this.props.videoData.resourceId.videoId} id="generatedPlayer" opts={opts} onReady={this.props.videoReady} onEnd={this.props.videoDone} onStateChange={this.props.videoSC} />
 				<div className="playOpts">
 					<input type="checkbox" id="showVideoDesc" className="hiddenInput" checked={this.props.showDesc} onChange={this.props.svc} />
-					<label className="poWrap" htmlFor="showVideoDesc" title={this.props.showDesc ? 'Hide Video Description' : 'Show Video Description'}>
-						<div className="matIcon loopIcon">subject</div>
-					</label>
+					<label className="poWrap matIcon loopIcon" htmlFor="showVideoDesc" title={this.props.showDesc ? 'Hide Video Description' : 'Show Video Description'}>subject</label>
 					<input type="checkbox" id="loopVideo" className="hiddenInput" checked={this.props.loopVid} onChange={this.props.lv} />
-					<label className="poWrap" htmlFor="loopVideo" title="Loop Video">
-						<div className="matIcon loopIcon">replay</div>
-					</label>
+					<label className="poWrap matIcon loopIcon" htmlFor="loopVideo" title="Loop Video">replay</label>
 					<input type="checkbox" id="loopPlay" className="hiddenInput" checked={this.props.loop} onChange={this.props.lp} />
-					<label className="poWrap" htmlFor="loopPlay" title="Loop Playlist">
-						<div className="matIcon loopIcon">loop</div>
-					</label>
-					<button className="poWrap">
-						<div className="matIcon shuffleIcon" title="Shuffle" onClick={this.props.shuffleClick}>shuffle</div>
-					</button>
-					<button className="poWrap">
-						<div className="matIcon relatedIcon" title="Related Videos" onClick={() => this.getRelatedVideos(this.props.videoData.resourceId.videoId, '')}>library_add</div>
-					</button>
+					<label className="poWrap matIcon loopIcon" htmlFor="loopPlay" title="Loop Playlist">loop</label>
+					<button className="poWrap matIcon shuffleIcon" title="Shuffle" onClick={this.props.shuffleClick}>shuffle</button>
+					<button className="poWrap matIcon relatedIcon" title="Related Videos" onClick={() => this.getRelatedVideos(this.props.videoData.resourceId.videoId, '')}>library_add</button>
 					<input type="checkbox" id="showUsersPlaylists" className="hiddenInput" checked={this.props.dup} onChange={this.props.sup} />
-					<label className="poWrap" htmlFor="showUsersPlaylists" title="Show User Playlists">
-						<div className="matIcon loopIcon">view_list</div>
-					</label>
+					<label className="poWrap matIcon loopIcon" htmlFor="showUsersPlaylists" title="Show User Playlists">view_list</label>
 				</div>
 				<div className={this.props.showDesc ? 'videoDescription' : 'videoDescription closed'}>
-					{this.props.videoData.description}
+					{(this.props.videoData.description.trim() === '') ? '(No Description)' : this.props.videoData.description}
 				</div>
 				<div id="lineupSectionContainer" className={this.state.relatedVideos.length > 0 ? 'lineupSection half' : 'lineupSection'}>
 					<ol>
