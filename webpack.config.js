@@ -1,4 +1,3 @@
-//require("./styles/main.css");
 __dirname = __dirname.charAt(0).toUpperCase() + __dirname.slice(1);
 var config = {
 	entry: './main.js',

@@ -276,9 +276,17 @@ h1 {
 	background-color: #007CB2;
 	color: #D3ECF7;
 }
+.lineupSection li:nth-child(odd):hover {
+	background-color: #007CB299;
+	color: #D3ECF799;
+}
 .lineupSection li:nth-child(even) {
 	background-color: #D3ECF7;
 	color: #FF8900;
+}
+.lineupSection li:nth-child(even):hover {
+	background-color: #D3ECF799;
+	color: #FF890099;
 }
 .lineupSection li div {
 	display: inline;
@@ -286,14 +294,20 @@ h1 {
 .lineupSection li span {
 	cursor: pointer;
 }
-.lineupSection li span .videoName {
-	text-decoration: underline;
-}
 .lineupSection li:nth-child(odd) span {
 	color: #D3ECF7;
 }
+.lineupSection li:nth-child(odd):hover span {
+	color: #D3ECF799;
+}
 .lineupSection li:nth-child(even) span {
 	color: #FF8900;
+}
+.lineupSection li:nth-child(even):hover span {
+	color: #FF890099;
+}
+.lineupSection li span .videoName {
+	text-decoration: underline;
 }
 .lineupSection li.currentPlaylistItem,
 .lineupSection li.currentPlaylistItem span {
@@ -339,6 +353,7 @@ h1 {
 	height: 500px
 }
 .relatedSection p {
+	font-weight: bold;
 	margin-top: 0;
 }
 .relatedSection ul {
@@ -351,8 +366,18 @@ h1 {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	color: #4809B2;
+	text-decoration: none;
 	margin-bottom: 10px;
 }
-.relatedSection li a span {
-	margin-bottom: 10px;
+.relatedSection li a:hover {
+	background-color: #FF8900;
+	color: #D3ECF7;
+	text-decoration: underline;
+}
+.relatedSection li a img {
+	border: solid 3px transparent;
+}
+.relatedSection li a:hover img {
+	border-color: #FF8900;
 }
