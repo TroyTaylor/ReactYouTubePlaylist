@@ -21,6 +21,20 @@ class VideoPlayer extends React.Component {
 	};
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.videoData.resourceId.videoId != this.props.videoData.resourceId.videoId) {
+			if (nextProps.nextData !== undefined) {
+				if (nextProps.nextData.thumbnails !== undefined) {
+					nextProps.nextData.thumbnailURL = nextProps.nextData.thumbnails.default.url;
+				} else {
+					nextProps.nextData.thumbnailURL = '';
+				}
+			}
+			if (nextProps.prevData !== undefined) {
+				if (nextProps.prevData.thumbnails !== undefined) {
+					nextProps.prevData.thumbnailURL = nextProps.prevData.thumbnails.default.url;
+				} else {
+					nextProps.prevData.thumbnailURL = '';
+				}
+			}
 			this.state.relatedVideos = [];
 			this.setState({relatedVideos: this.state.relatedVideos});
 		}
@@ -70,10 +84,10 @@ class VideoPlayer extends React.Component {
 				<p className="currentTitle"><span className="currentTitleName">{this.props.videoData.title}</span> <span className="currentTitleCount">{this.props.index} of {this.props.totalVids}</span></p>
 				<div className="videoNav">
 					{this.props.prevData.title == undefined ? <div></div> : <button className="prevButton matIcon miPrev" onClick={() => this.scrollCurrentVideoToTop('pli' + (this.props.index - 2), this.props.prevClick)}>skip_previous</button>}
-					{this.props.prevData.title == undefined ? '' : <div className="vnInfo prevInfo"><p>Previous: {this.props.prevData.title}</p><img src={this.props.prevData.thumbnails.default.url} /></div>}
+					{this.props.prevData.title == undefined ? '' : <div className="vnInfo prevInfo"><p>Previous: {this.props.prevData.title}</p><img src={this.props.prevData.thumbnailURL} /></div>}
 					
 					{this.props.nextData.title == undefined ? <div></div> : <button className="nextButton matIcon miNext" onClick={() => this.scrollCurrentVideoToTop('pli' + this.props.index, this.props.nextClick)}>skip_next</button>}
-					{this.props.nextData.title == undefined ? '' : <div className="vnInfo nextInfo"><p>Next: {this.props.nextData.title}</p><img src={this.props.nextData.thumbnails.default.url} /></div>}
+					{this.props.nextData.title == undefined ? '' : <div className="vnInfo nextInfo"><p>Next: {this.props.nextData.title}</p><img src={this.props.nextData.thumbnailURL} /></div>}
 				</div>
 				<YouTube videoId={this.props.videoData.resourceId.videoId} id="generatedPlayer" opts={opts} onReady={this.props.videoReady} onEnd={this.props.videoDone} onStateChange={this.props.videoSC} />
 				<div className="playOpts">

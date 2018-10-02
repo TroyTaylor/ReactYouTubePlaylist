@@ -283,7 +283,7 @@ class Playlists extends React.Component {
 				event.target.playVideo();
 				break;
 			default:
-				this.state.pageTitle = 'Troy\'s YouTube Randomizer';
+				this.state.pageTitle = 'Coming up: ' + this.state.generatedList[this.state.currentVideoId].snippet.title + ' on Troy\'s YouTube Randomizer';
 				this.state.currentIcon = '';
 		}
 		this.setState({pageTitle: this.state.pageTitle, currentIcon: this.state.currentIcon});
