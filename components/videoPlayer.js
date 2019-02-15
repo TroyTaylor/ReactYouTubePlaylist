@@ -10,7 +10,7 @@ class ScrollListElement extends newReactScroll.Element {
 	}
 }
 
-class VideoPlayer extends React.Component {
+export default class VideoPlayer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -122,5 +122,3 @@ class VideoPlayer extends React.Component {
 		);
 	}
 }
-
-module.exports = VideoPlayer;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-class PreviousUserItem extends React.Component {
+export default class PreviousUserItem extends React.Component {
 	render() {
 		return (
 			<li>
@@ -9,5 +9,3 @@ class PreviousUserItem extends React.Component {
 		);
 	}
 }
-
-module.exports = PreviousUserItem;

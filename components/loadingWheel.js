@@ -1,6 +1,6 @@
 import React from 'react';
 
-class LoadingWheel extends React.Component {
+export default class LoadingWheel extends React.Component {
 	constructor(props) {
 		super(props);
 	};
@@ -13,5 +13,3 @@ class LoadingWheel extends React.Component {
 		);
 	}
 }
-
-module.exports = LoadingWheel;

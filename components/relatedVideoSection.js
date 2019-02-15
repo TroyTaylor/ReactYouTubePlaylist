@@ -1,6 +1,6 @@
 import React from 'react';
 
-class RelatedVideoSection extends React.Component {
+export default class RelatedVideoSection extends React.Component {
 	render() {
 		return (
 			<div className="relatedSection">
@@ -19,5 +19,3 @@ class RelatedVideoSection extends React.Component {
 		);
 	}
 }
-
-module.exports = RelatedVideoSection;

@@ -6,7 +6,7 @@ import LoadingWheel from './loadingWheel';
 import ListElement from './listElement';
 import VideoPlayer from './videoPlayer';
 
-class Playlists extends React.Component {
+export default class Playlists extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -348,5 +348,3 @@ class Playlists extends React.Component {
 		);
 	}
 }
-
-module.exports = Playlists;

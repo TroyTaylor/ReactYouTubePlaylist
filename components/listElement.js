@@ -1,6 +1,6 @@
 import React from 'react';
 
-class ListElement extends React.Component {
+export default class ListElement extends React.Component {
 	render() {
 		return (
 			<li>
@@ -10,5 +10,3 @@ class ListElement extends React.Component {
 		);
 	}
 }
-
-module.exports = ListElement;

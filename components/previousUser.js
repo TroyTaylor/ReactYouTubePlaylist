@@ -1,7 +1,7 @@
 import React from 'react';
 import PreviousUserItem from './previousUserItem';
 
-class PreviousUser extends React.Component {
+export default class PreviousUser extends React.Component {
 	render() {
 		return (
 			<div className='previousUser'>
@@ -13,5 +13,3 @@ class PreviousUser extends React.Component {
 		);
 	}
 }
-
-module.exports = PreviousUser;
